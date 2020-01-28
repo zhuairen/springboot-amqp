@@ -1,4 +1,4 @@
-package com.fxn.amqp.demo1;
+package com.fxn.amqp.single;
 
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;

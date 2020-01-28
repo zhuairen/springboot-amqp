@@ -1,16 +1,14 @@
-package com.fxn.amqp.demo1;
+package com.fxn.amqp.work;
 
+import com.fxn.amqp.single.ConnectionUtil;
 import com.rabbitmq.client.*;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
-/**
- * 消费者示例（简单队列）
- */
-public class Consumer {
+public class Consumer2 {
 
-    private static final String queue = "test_queue";
+    private static final String queue = "test_work_queue";
 
     public static void main(String[] args) throws IOException, TimeoutException {
 
@@ -23,16 +21,22 @@ public class Consumer {
         //队列声明
         channel.queueDeclare(queue, false, false, false, null);
 
-        DefaultConsumer defaultConsumer = new DefaultConsumer(channel) {
+        //定义消费者
+        DefaultConsumer defaultConsumer = new DefaultConsumer(channel){
             @Override
             public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
-                String msg = new String(body, "utf-8");
-                System.out.println(msg);
+
+                String msg = new String(body,"utf-8");
+                System.out.println("Consumer2 "+ msg);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+
+                }
             }
         };
 
-        //监听队列
-        channel.basicConsume(queue, true, defaultConsumer);
-
+        boolean autoAck = true;
+        channel.basicConsume(queue,autoAck,defaultConsumer);
     }
 }
